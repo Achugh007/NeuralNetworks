@@ -1,38 +1,25 @@
 import nltk
-from nltk.corpus import wordnet as wn
+from nltk.corpus import wordnet
 
-# Ensure you've downloaded WordNet
-nltk.download('wordnet') 
+# Download WordNet
+nltk.download('wordnet')
 
-def path_similarity(word1, word2):
-    synsets1 = wn.synsets(word1)
-    synsets2 = wn.synsets(word2)
-    if synsets1 and synsets2:  
-        # Remove the len() call and access the distance directly
-        best_path = min(s1.shortest_path_distance(s2) 
-                          for s1 in synsets1 for s2 in synsets2 if s1.shortest_path_distance(s2) is not None, 
-                          default=None)  
-        return 1 / (best_path + 1) if best_path is not None else 0 
-    else: 
-        return 0 
+def compute_similarity(word1, word2):
+    synsets1 = wordnet.synsets(word1)
+    synsets2 = wordnet.synsets(word2)
+    
+    max_similarity = 0
+    
+    for synset1 in synsets1:
+        for synset2 in synsets2:
+            similarity = synset1.wup_similarity(synset2)
+            if similarity is not None and similarity > max_similarity:
+                max_similarity = similarity
+    
+    return max_similarity
 
-def wup_similarity(word1, word2):
-    synsets1 = wn.synsets(word1)
-    synsets2 = wn.synsets(word2)
-    if synsets1 and synsets2:
-        best_lcs = max((s1.wup_similarity(s2) 
-                         for s1 in synsets1 for s2 in synsets2), 
-                         default=0) 
-        return best_lcs
-    else:
-        return 0
-
-# Example Usage 
-word1 = "dog"
-word2 = "cat" 
-
-path_sim = path_similarity(word1, word2)
-wup_sim = wup_similarity(word1, word2)
-
-print("Path Similarity:", path_sim)
-print("Wu-Palmer Similarity:", wup_sim)
+# Test the function
+word1 = "car"
+word2 = "automobile"
+similarity = compute_similarity(word1, word2)
+print(f"Similarity between '{word1}' and '{word2}': {similarity}")
