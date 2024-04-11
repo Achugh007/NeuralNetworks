@@ -1,5 +1,3 @@
-#Computing Word Similarity Using WordNet
-
 import nltk
 from nltk.corpus import wordnet as wn
 
@@ -10,10 +8,11 @@ def path_similarity(word1, word2):
     synsets1 = wn.synsets(word1)
     synsets2 = wn.synsets(word2)
     if synsets1 and synsets2:  
-        best_path = min((len(s1.shortest_path_distance(s2)) 
-                          for s1 in synsets1 for s2 in synsets2), 
+        # Remove the len() call and access the distance directly
+        best_path = min(s1.shortest_path_distance(s2) 
+                          for s1 in synsets1 for s2 in synsets2 if s1.shortest_path_distance(s2) is not None, 
                           default=None)  
-        return 1 / (best_path + 1) if best_path else 0 
+        return 1 / (best_path + 1) if best_path is not None else 0 
     else: 
         return 0 
 
