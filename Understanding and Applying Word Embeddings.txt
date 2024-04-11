@@ -1,0 +1,119 @@
+Understanding and Applying Word Embeddings
+
+Objective:  Learn the concept of word embeddings, generate word embeddings using pre-trained models, and utilize these numerical representations for text similarity tasks.
+
+System Requirements
+
+Operating System: Windows, macOS, or Linux.
+Hardware:
+CPU: Modern dual-core processor or better.
+RAM: 4GB minimum, 8GB or more recommended (especially when working with large pre-trained models).
+Storage: A few GB for code, libraries, and potentially pre-trained model files (which can be large).
+GPU (Optional): While not strictly required, a GPU can significantly speed up model training and computations.
+Software:
+Python: (https://www.python.org/). Version 3.6 or later recommended.
+NumPy: Install using pip install numpy
+Gensim: Install using pip install gensim
+Optional: Spacy: Install using pip install spacy (Along with a language model like python -m spacy download en_core_web_sm)
+Lab Procedure
+
+Introduction to Word Embeddings
+
+Explanation:
+Dense vector representations of words capturing semantic and syntactic relationships.
+Words with similar meanings tend to have similar vector representations.
+Advantages over One-Hot Encoding: Overcome issues of high dimensionality and lack of semantic representation.
+Pre-trained Word Embeddings
+
+Popular Models: Word2Vec, GloVe, FastText (available from sources like https://nlp.stanford.edu/projects/glove/)
+Loading Models with Gensim:
+Python
+from gensim.models import KeyedVectors 
+
+model_file = 'glove.6B.100d.txt.word2vec'  # Example using GloVe
+model = KeyedVectors.load_word2vec_format(model_file, binary=False) 
+Use code with caution.
+Exploring Word Relationships
+
+Python
+word1 = "woman"
+word2 = "man"
+word3 = "king"
+
+similarity = model.similarity(word1, word2)
+print(f"Similarity between '{word1}' and '{word2}': {similarity}") 
+
+result = model.most_similar(positive=[word3, word1], negative=[word2], topn=1)
+print(f"Analogy: {word3} is to {word1} as {word2} is to {result[0][0]}")
+Use code with caution.
+Calculating Text Similarity
+
+Average Word Embeddings: Calculate the average of word vectors within a sentence or document.
+Cosine Similarity: Measure similarity between averaged vectors.
+Python
+import numpy as np
+
+def calculate_similarity(text1, text2, model):
+    # Preprocessing (tokenize, remove stop words, etc.) 
+    # ...
+
+    embedding1 = np.mean([model[word] for word in text1 if word in model. vocab], axis=0)
+    embedding2 = np.mean([model[word] for word in text2 if word in model.vocab], axis=0)
+
+    from scipy import spatial
+    cosine_similarity = 1 - spatial.distance.cosine(embedding1, embedding2)
+    return cosine_similarity
+Use code with caution.
+Tasks
+
+Different Pre-trained Models: Experiment with different word embedding models (Word2Vec, GloVe, etc.).
+Analogy Task: Create more complex word analogies.
+Document Similarity: Calculate similarity scores between short documents.
+Optional: Training Your Own Embeddings
+
+Larger Corpus: Requires a substantial text dataset.
+Gensim Implementation: Refer to Gensim's Word2Vec documentation.
+Evaluation
+
+Discussion about insights from word embedding exploration.
+Students demonstrate the use of word embeddings for text similarity.
+
+
+import numpy as np
+import nltk
+from nltk.corpus import stopwords
+from gensim.models import KeyedVectors 
+from scipy import spatial
+
+# Download necessary NLTK data if you haven't already
+nltk.download('punkt')
+nltk.download('stopwords')
+
+def preprocess(text):
+    """Performs basic text preprocessing."""
+    tokens = nltk.word_tokenize(text)
+    stop_words = set(stopwords.words('english'))
+    filtered_words = [w for w in tokens if w.lower() not in stop_words]
+    return filtered_words
+
+def calculate_similarity(text1, text2, model):
+    """Calculates cosine similarity between two texts."""
+    processed_text1 = preprocess(text1)
+    processed_text2 = preprocess(text2)
+
+    embedding1 = np.mean([model[word] for word in processed_text1 if word in model.vocab], axis=0)
+    embedding2 = np.mean([model[word] for word in processed_text2 if word in model.vocab], axis=0)
+
+    cosine_similarity = 1 - spatial.distance.cosine(embedding1, embedding2)
+    return cosine_similarity
+
+# Example Usage:
+# 1. Download a pre-trained model (e.g., GloVe) from https://nlp.stanford.edu/projects/glove/
+model_file = 'glove.6B.100d.txt.word2vec'  # Replace with the path to your model file
+model = KeyedVectors.load_word2vec_format(model_file, binary=False) 
+
+text1 = "This is a sample sentence."
+text2 = "This is another sentence for comparison."
+
+similarity_score = calculate_similarity(text1, text2, model)
+print("Similarity Score:", similarity_score) 

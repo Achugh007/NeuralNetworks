@@ -1,0 +1,84 @@
+Here's a hands-on lab for exploring one-hot encoding with text data, including system requirements:
+
+Title:  Representing Text Data with One-hot Encoding
+
+Objective:  Understand the concept of one-hot encoding, its application to text data, and how to implement it using Python libraries.
+
+System Requirements
+
+Operating System: Windows, macOS, or Linux.
+Hardware:
+CPU: Modern dual-core processor or better.
+RAM: 4GB minimum, 8GB recommended.
+Storage: A few GB of free space.
+Software:
+Python: (https://www.python.org/). Version 3.6 or later recommended.
+NumPy: Install using pip install numpy
+scikit-learn: Install using pip install scikit-learn
+Lab Procedure
+
+Understanding One-Hot Encoding
+
+Explanation:
+Method to convert categorical data (like words) into numerical vectors.
+Creates a binary vector where one position is 'hot' (marked as 1) and the rest are 0.
+Essential for many machine learning algorithms that work with numerical data.
+Preparing Data
+
+Text Corpus: Start with a small set of text documents (news articles, product descriptions, sentences).
+Preprocessing:
+Tokenization: Splitting the text into individual words.
+Optional: Cleaning (removing stop words, stemming, etc.).
+Creating a Vocabulary
+
+Gather all the unique words from the processed dataset. This will be your vocabulary.
+One-Hot Encoding with scikit-learn
+
+Python
+from sklearn.feature_extraction.text import CountVectorizer
+
+corpus = [
+     'This is the first document',
+     'This is the second document',
+     'And the third document',
+     'Is this the first document'
+]
+
+vectorizer = CountVectorizer() 
+X = vectorizer.fit_transform(corpus) 
+print(vectorizer.get_feature_names_out()) 
+print(X.toarray()) 
+Use code with caution.
+Explanation:
+CountVectorizer builds the vocabulary and creates a sparse matrix representation by counting word occurrences.
+.toarray() converts the sparse matrix to a dense NumPy array.
+One-Hot Encoding with NumPy
+
+Python
+import numpy as np
+
+vocabulary = ['and', 'document', 'first', 'is', 'second', 'the', 'third']
+sample = "This is the first document"
+
+def one_hot_encode(text, vocabulary):
+   words = text.split()
+   encoding = np.zeros(len(vocabulary))
+   for word in words:
+        if word in vocabulary:
+            index = vocabulary.index(word)
+            encoding[index] = 1
+   return encoding
+
+encoded_sample = one_hot_encode(sample, vocabulary)
+print(encoded_sample)
+Use code with caution.
+Tasks
+
+Experiment: Apply one-hot encoding to different text datasets.
+Large Vocabulary: Discuss strategies for handling large vocabularies (pruning, hashing).
+Downstream Task: Try using the one-hot encoded representation as input to a simple machine learning model (like Naive Bayes) for classification.
+Evaluation
+
+Review student understanding of one-hot encoding through discussion or a short quiz.
+Assess the ability to apply encoding techniques to different datasets.
+Let me know if you want me to expand on specific parts, provide code examples for downstream tasks, or suggest datasets for this lab!

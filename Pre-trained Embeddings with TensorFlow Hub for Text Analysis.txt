@@ -1,0 +1,141 @@
+Leveraging Pre-trained Embeddings with TensorFlow Hub for Text Analysis
+
+Objective:  Learn how to find, load, and utilize pre-trained text embedding models from the TensorFlow Hub for various NLP tasks.
+
+System Requirements
+
+Operating System: Windows, macOS, or Linux.
+Hardware:
+CPU: Modern dual-core processor or better.
+RAM: 4GB minimum, 8GB or more recommended.
+Storage: A few GB for code and libraries
+Software:
+Python: (https://www.python.org/). Version 3.6 or later recommended.
+TensorFlow: Install with pip install tensorflow.
+TensorFlow Hub: Install with pip install tensorflow-hub
+NumPy: Install using pip install numpy
+Lab Procedure
+
+Exploring TensorFlow Hub
+
+Introduction: Explain TensorFlow Hub as a repository of pre-trained models (https://tfhub.dev/).
+Browsing Text Embeddings: Focus on the text embedding section. Guide students through searching and filtering models based on task and language.
+Loading a Pre-trained Embedding Model
+
+Python
+import tensorflow_hub as hub
+
+embed_url = "https://tfhub.dev/google/universal-sentence-encoder/4"  # Example model
+embed = hub.KerasLayer(embed_url)
+Use code with caution.
+Generating Text Embeddings
+
+Python
+text_samples = ["This is a great product.", 
+                "The customer service was terrible.",
+                "I would definitely recommend this!"]
+embeddings = embed(text_samples)
+print(embeddings.shape) 
+Use code with caution.
+Discuss Embedding Dimensionality: Output shape shows the dimensionality of the chosen embedding model.
+Downstream Tasks
+
+Task 1: Text Similarity
+
+Implement cosine similarity (from previous labs).
+Have students calculate similarity between text pairs.
+Task 2:  Semantic Search
+
+Provide a larger dataset of text.
+Calculate embeddings for all the text.
+Students enter a query and retrieve the most semantically similar documents.
+Task 3:  Short Text Classification (Optional)
+
+Load a dataset for sentiment analysis or topic classification.
+Build a simple neural network on top of the pre-trained embeddings for classification.
+Fine-tuning (Optional)
+
+When to Fine-tune: Explain when fine-tuning a pre-trained embedding model on your dataset might be beneficial.
+Implementing Fine-tuning: Guide students through modifying the loaded model to allow fine-tuning specific layers.
+Evaluation
+
+Discussion about the efficiency of using pre-trained embeddings.
+Assess performance differences in downstream tasks between different pre-trained models.
+If fine-tuning is explored, discuss any observed improvements.
+Let me know if you'd like...
+
+Recommendations for suitable datasets.
+Code assistance with the classification task or fine-tuning.
+Suggestions for other potential downstream NLP applications to explore!
+profile picture
+write the complete code
+
+1
++
+Absolutely! Here's the complete code for the hands-on lab using pre-trained embeddings from TensorFlow Hub. I'll include all the downstream tasks for text similarity, semantic search, and short text classification.
+
+Python
+import tensorflow as tf
+import tensorflow_hub as hub
+import numpy as np
+from scipy import spatial
+
+# --- Loading Pre-trained Embeddings --- 
+embed_url = "https://tfhub.dev/google/universal-sentence-encoder/4" 
+embed = hub.KerasLayer(embed_url)
+
+# --- Generating Text Embeddings ---
+text_samples = ["This is a great product.", 
+                "The customer service was terrible.",
+                "I would definitely recommend this!"]
+embeddings = embed(text_samples)
+print("Embedding Shape:", embeddings.shape) 
+
+# --- Task 1: Text Similarity ---
+def calculate_similarity(embedding1, embedding2):
+    cosine_similarity = 1 - spatial.distance.cosine(embedding1, embedding2)
+    return cosine_similarity
+
+similarity_1_2 = calculate_similarity(embeddings[0], embeddings[1])
+similarity_2_3 = calculate_similarity(embeddings[1], embeddings[2])  
+
+print("Similarity between first and second sentence:", similarity_1_2)
+print("Similarity between second and third sentence:", similarity_2_3)
+
+# --- Task 2: Semantic Search ---
+# (You'll need a larger dataset of text for this)
+# ... Code for loading your dataset
+
+search_query = "I need help with my order."
+query_embedding = embed([search_query])
+
+similarities = [calculate_similarity(query_embedding, doc_embedding) for doc_embedding in dataset_embeddings]
+top_matches = np.argsort(similarities)[-3:][::-1]  # Get top 3 similar documents
+
+print("Top 3 most similar documents to the query:")
+for idx in top_matches:
+    print(dataset[idx]) 
+
+# --- Task 3: Short Text Classification ---
+# (You'll need a labeled dataset like a sentiment analysis dataset)
+# ... Code for loading your dataset
+
+num_classes = len(set(y_train))  # Determine number of output classes
+
+model = tf.keras.Sequential([
+    embed,  # Use the pre-trained embedding layer
+    tf.keras.layers.Dense(16, activation='relu'),
+    tf.keras.layers.Dense(num_classes, activation='softmax')
+])
+
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+model.fit(X_train, y_train, epochs=5) 
+Use code with caution.
+Important Notes:
+
+Datasets: You'll need datasets for Task 2 (semantic search) and Task 3 (classification). See previous lab suggestions for sources.
+Code Placeholders: Replace the ... sections with code to load your datasets.
+Adapting Classification: If your classification dataset uses different labels (not sparse indices), adjust the output layer and loss function accordingly.

@@ -1,0 +1,83 @@
+Text Tokenization with Byte Pair Encoding
+
+Objective:  Understand the BPE algorithm, train a BPE tokenizer on a text corpus, and apply it for text tokenization tasks.
+
+System Requirements
+
+Operating System: Windows, macOS, or Linux.
+Hardware:
+CPU: Modern dual-core processor or better.
+RAM: 4GB minimum, 8GB or more recommended.
+Software:
+Python: (https://www.python.org/). Version 3.6 or later recommended.
+subword-nmt: Install with pip install subword-nmt
+Optional: SentencePiece: Install with pip install sentencepiece. SentencePiece offers an alternative, highly efficient BPE implementation.
+Lab Procedure
+
+Understanding Byte Pair Encoding
+
+Explanation:
+Starts with character-level vocabulary.
+Iteratively merges frequent character pairs into new symbols.
+Balances vocabulary size and handling of rare words.
+Advantages:
+Open vocabulary
+Works well for morphologically rich languages
+Preparing a Text Corpus
+
+Dataset: A plain text corpus (articles, code, etc.). The quality and size of your corpus influence the quality of the tokenizer.
+Preprocessing (Optional): Consider light normalization (lowercasing, handling special characters) if it aligns with your task.
+Training a BPE Tokenizer (using subword-nmt)
+
+Bash
+subword-nmt learn-bpe -s 30000 < corpus.txt > codes.txt  # Train with vocab size of 30000
+Use code with caution.
+Parameters: -s controls the desired vocabulary size. Experiment with different values.
+Applying the BPE Tokenizer
+
+Bash
+subword-nmt apply-bpe -c codes.txt < input.txt > output.txt
+Use code with caution.
+Python
+import subword_nmt as subword
+
+tokenizer = subword.load_bpe('codes.txt')
+
+sentence = "This is a sentence for tokenization."
+tokens = tokenizer.segment(sentence)
+print(tokens)
+Use code with caution.
+Decoding BPE Tokens
+
+Python
+# Reverse the encoding process
+decoded_text = tokens.replace('@@ ', '')  
+print(decoded_text)
+Use code with caution.
+Tasks
+
+Vocabulary Size: Train with different vocabulary sizes and observe the impact on tokenization.
+Different Corpora: Explore how the corpus type influences the learned vocabulary.
+SentencePiece: Train a BPE tokenizer using SentencePiece and compare the results and speed.
+Evaluation
+
+Qualitative: Examine tokenized outputs from different models, especially how they handle unknown words.
+Performance: If speed is critical, benchmark SentencePiece vs. subword-nmt.
+Additional Considerations
+
+Word Boundary Symbol: Some implementations add a special end-of-word symbol like '@@'.
+Advanced Usage: BPE is often integrated into large pre-trained language models (e.g., GPT-2, BERT).
+
+
+import subword_nmt as subword
+
+# Assuming you've trained your BPE model and have a 'codes.txt' file:
+tokenizer = subword.load_bpe('codes.txt') 
+
+sentence = "This is a sentence for tokenization."
+tokens = tokenizer.segment(sentence)
+print(tokens) 
+
+decoded_text = ' '.join(tokens).replace('@@ ', '')  
+print(decoded_text) 
+

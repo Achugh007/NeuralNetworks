@@ -1,0 +1,77 @@
+Document Classification with TF-IDF and Deep Neural Networks
+
+Objective:  Learn to use TF-IDF for feature engineering, build a simple DNN model in TensorFlow/Keras, and train it for document classification.
+
+System Requirements
+
+Operating System: Windows, macOS, or Linux.
+Hardware:
+CPU: Modern multi-core processor.
+RAM: 8GB minimum, 16GB or more recommended.
+GPU (Recommended): A CUDA-compatible NVIDIA GPU for faster training, especially with larger datasets.
+Software:
+Python: (https://www.python.org/). Version 3.6 or later recommended.
+TensorFlow/Keras Install with pip install tensorflow.
+scikit-learn: Install using pip install scikit-learn
+NumPy: Install using pip install numpy
+Lab Procedure
+
+Dataset Preparation
+
+Text Dataset: A labeled dataset of text documents (e.g., news articles with categories, product reviews with ratings, etc.). Split into training and testing sets.
+Data Sources:
+Kaggle ([invalid URL removed])
+UCI Machine Learning Repository (https://archive.ics.uci.edu/ml/index.php)
+TF-IDF Representation
+
+Explanation of TF-IDF: Discuss Term Frequency - Inverse Document Frequency and its importance for text representation.
+Using scikit-learn:
+Python
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+vectorizer = TfidfVectorizer()  
+X_train = vectorizer.fit_transform(training_data)  
+X_test = vectorizer.transform(testing_data) 
+Use code with caution.
+Building a DNN with Keras
+
+Simple DNN Architecture:
+Python
+from tensorflow import keras
+
+model = keras.Sequential([
+    keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
+    keras.layers.Dense(32, activation='relu'), 
+    keras.layers.Dense(num_classes, activation='softmax')  # Output layer 
+])
+Use code with caution.
+Explanation: Input layer, hidden layers (size and activation can be adjusted), output layer using 'softmax' for classification.
+Model Compilation
+
+Python
+model.compile(optimizer='adam',
+              loss='categorical_crossentropy', 
+              metrics=['accuracy']) 
+Use code with caution.
+Understanding Loss and Optimizer: Explain the choice of loss function and optimizer.
+Model Training
+
+Python
+model.fit(X_train, y_train, epochs=10, batch_size=32) 
+Use code with caution.
+Hyperparameters: Discuss the role of epochs and batch size.
+Evaluation
+
+Python
+test_loss, test_acc = model.evaluate(X_test, y_test)
+print("Test Accuracy:", test_acc)
+Use code with caution.
+Tasks
+
+Experimentation with hyperparameters: Change the DNN architecture, optimizer, epochs, etc.
+Different datasets: Explore how the DNN performs on different text classification tasks.
+Evaluation
+
+Observe how changing various components impacts results.
+Discuss performance trade-offs and improvement strategies.
+Let me know if you'd like to focus on specific aspects of the lab, want dataset recommendations, or help with advanced DNN architectures.

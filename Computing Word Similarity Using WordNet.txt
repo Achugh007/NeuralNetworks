@@ -1,3 +1,29 @@
+Prerequisites
+
+Python: You'll need Python installed (https://www.python.org/)
+NLTK: Install the Natural Language Toolkit (NLTK) library: pip install nltk
+WordNet: NLTK needs WordNet. Download it by running nltk.download('wordnet') in your Python terminal.
+
+Importing Libraries:
+
+This block imports necessary libraries for the code to run, including nltk for Natural Language Processing tasks and wordnet from nltk.corpus for accessing WordNet.
+Checking WordNet Download:
+
+This block checks if WordNet is already downloaded by verifying the existence of synsets for the word "car". If WordNet is not downloaded, it downloads it using nltk.download('wordnet').
+Defining the compute_similarity Function:
+
+This block defines a function named compute_similarity that takes two words as input and computes their similarity using WordNet's Wu-Palmer similarity measure.
+It retrieves synsets for both input words using wordnet.synsets(word).
+It iterates through all possible pairs of synsets for the input words and computes the similarity between them using the Wu-Palmer similarity measure (synset1.wup_similarity(synset2)).
+It updates the max_similarity variable to store the maximum similarity found among all pairs of synsets.
+Finally, it returns the maximum similarity score.
+Testing the Function:
+
+This block tests the compute_similarity function by providing two example words, "car" and "automobile", and prints the similarity score computed by the function.
+Printing Output:
+
+This block prints a message indicating that the output was printed successfully, serving as a confirmation of the completion of the code execution.
+
 import nltk
 from nltk.corpus import wordnet
 
