@@ -1,0 +1,18 @@
+from textblob import TextBlob
+
+# Text data for sentiment analysis
+text = "I love TextBlob! It's so easy to use and powerful."
+
+# Create a TextBlob object
+blob = TextBlob(text)
+
+# Perform sentiment analysis
+sentiment = blob.sentiment
+
+# Extract polarity and subjectivity
+polarity = sentiment.polarity
+subjectivity = sentiment.subjectivity
+
+# Print results
+print(f"Polarity: {polarity}")
+print(f"Subjectivity: {subjectivity}")
