@@ -1,3 +1,5 @@
+import os
+import requests
 import numpy as np
 import nltk
 from nltk.corpus import stopwords
@@ -7,6 +9,32 @@ from scipy import spatial
 # Download necessary NLTK data
 nltk.download('punkt')
 nltk.download('stopwords')
+
+# Directory and file paths
+labfiles_dir = r'd:\Labfiles'
+model_file = os.path.join(labfiles_dir, 'glove.6B.100d.txt.word2vec')
+
+# Check if the model file exists
+if not os.path.exists(model_file):
+    # Download the model
+    print("Downloading GloVe model...")
+    url = 'https://nlp.stanford.edu/data/glove.6B.zip'
+    response = requests.get(url)
+
+    # Save the zip file
+    zip_file = os.path.join(labfiles_dir, 'glove.6B.zip')
+    with open(zip_file, 'wb') as f:
+        f.write(response.content)
+
+    # Extract the word2vec file
+    import zipfile
+    with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+        zip_ref.extractall(labfiles_dir)
+
+    # Delete the zip file
+    os.remove(zip_file)
+    print("GloVe model downloaded and extracted.")
+
 
 # Load the GloVe model (adjust path if needed)
 model_file = r'd:\Labfiles\glove.6B.100d.txt.word2vec' 
