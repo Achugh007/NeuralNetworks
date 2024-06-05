@@ -1,51 +1,60 @@
-import os
-import requests
+import tensorflow as tf
+import tensorflow_hub as hub
 import numpy as np
-import nltk
-from nltk.corpus import stopwords
-from gensim.models import KeyedVectors
 from scipy import spatial
+import pandas as pd
 
-# Download necessary NLTK data
-nltk.download('punkt')
-nltk.download('stopwords')
+# --- Loading Pre-trained Embeddings --- 
+embed_url = "https://tfhub.dev/google/universal-sentence-encoder/4" 
+embed = hub.KerasLayer(embed_url)
 
-# Directory and file paths (ensure this path is correct!)
-labfiles_dir = r'd:\Labfiles'  # Or the correct directory if it's different
-model_file = os.path.join(labfiles_dir, 'glove.6B.100d.txt.word2vec')
+# --- Defining Helper Functions ---
+def calculate_similarity(embedding1, embedding2):
+  cosine_similarity = 1 - spatial.distance.cosine(embedding1, embedding2)
+  return cosine_similarity
 
-# Check if the file exists, download if not
-if not os.path.exists(model_file):
-    # ... (download and extraction logic as before)
+# --- Task 1: Text Similarity ---
+text_samples = ["This is a great product.", 
+                "The customer service was terrible.",
+                "I would definitely recommend this!"]
+embeddings = embed(text_samples)
 
-# Load the GloVe model (check for typos in the filename)
-model = KeyedVectors.load_word2vec_format(model_file, binary=False)
+similarity_1_2 = calculate_similarity(embeddings[0], embeddings[1])
+similarity_2_3 = calculate_similarity(embeddings[1], embeddings[2])  
 
-# Load the GloVe model (adjust path if needed)
-model_file = r'd:\Labfiles\glove.6B.100d.txt.word2vec' 
-model = KeyedVectors.load_word2vec_format(model_file, binary=False)
+print("Similarity between first and second sentence:", similarity_1_2)
+print("Similarity between second and third sentence:", similarity_2_3)
 
-def preprocess(text):
-    """Performs basic text preprocessing (tokenization, stopword removal)."""
-    tokens = nltk.word_tokenize(text)
-    stop_words = set(stopwords.words('english'))
-    filtered_words = [w.lower() for w in tokens if w.lower() not in stop_words]
-    return filtered_words
+# --- Task 2: Semantic Search ---
+# Load your dataset (replace 'your_dataset.csv' with the correct path)
+data = pd.read_csv("your_dataset.csv") 
 
-def calculate_similarity(text1, text2, model):
-    """Calculates cosine similarity between two preprocessed texts."""
-    embedding1 = np.mean([model[word] for word in text1 if word in model.vocab], axis=0)
-    embedding2 = np.mean([model[word] for word in text2 if word in model.vocab], axis=0)
-    return 1 - spatial.distance.cosine(embedding1, embedding2)
+# Assuming a column named 'text' in your dataset:
+dataset_embeddings = embed(data['text'].tolist()) 
 
+search_query = "I need help with my order."
+query_embedding = embed([search_query])
 
-# Example usage
-text1 = "This is a sample sentence."
-text2 = "This is another sentence for comparison."
+similarities = [calculate_similarity(query_embedding, doc_embedding) for doc_embedding in dataset_embeddings]
+top_matches = np.argsort(similarities)[-3:][::-1] 
 
-# Preprocess the texts
-processed_text1 = preprocess(text1)
-processed_text2 = preprocess(text2)
+print("Top 3 most similar documents to the query:")
+for idx in top_matches:
+  print(data['text'].iloc[idx])  # Assuming your dataset has a 'text' column
 
-similarity_score = calculate_similarity(processed_text1, processed_text2, model)
-print("Similarity Score:", similarity_score) 
+# --- Task 3: Short Text Classification ---
+# (You'll need a labeled dataset)
+# ... Code for loading your dataset
+
+num_classes = len(set(data['label']))  # Assuming your dataset has a 'label' column
+model = tf.keras.Sequential([
+  embed, 
+  tf.keras.layers.Dense(16, activation='relu'),
+  tf.keras.layers.Dense(num_classes, activation='softmax')
+])
+
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+model.fit(data['text'], data['label'], epochs=5)  # Assuming 'text' and 'label' columns
