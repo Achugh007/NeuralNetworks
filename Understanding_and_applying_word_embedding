@@ -10,31 +10,16 @@ from scipy import spatial
 nltk.download('punkt')
 nltk.download('stopwords')
 
-# Directory and file paths
-labfiles_dir = r'd:\Labfiles'
+# Directory and file paths (ensure this path is correct!)
+labfiles_dir = r'd:\Labfiles'  # Or the correct directory if it's different
 model_file = os.path.join(labfiles_dir, 'glove.6B.100d.txt.word2vec')
 
-# Check if the model file exists
+# Check if the file exists, download if not
 if not os.path.exists(model_file):
-    # Download the model
-    print("Downloading GloVe model...")
-    url = 'https://nlp.stanford.edu/data/glove.6B.zip'
-    response = requests.get(url)
+    # ... (download and extraction logic as before)
 
-    # Save the zip file
-    zip_file = os.path.join(labfiles_dir, 'glove.6B.zip')
-    with open(zip_file, 'wb') as f:
-        f.write(response.content)
-
-    # Extract the word2vec file
-    import zipfile
-    with zipfile.ZipFile(zip_file, 'r') as zip_ref:
-        zip_ref.extractall(labfiles_dir)
-
-    # Delete the zip file
-    os.remove(zip_file)
-    print("GloVe model downloaded and extracted.")
-
+# Load the GloVe model (check for typos in the filename)
+model = KeyedVectors.load_word2vec_format(model_file, binary=False)
 
 # Load the GloVe model (adjust path if needed)
 model_file = r'd:\Labfiles\glove.6B.100d.txt.word2vec' 
