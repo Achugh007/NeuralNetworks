@@ -1,0 +1,23 @@
+from transformers import pipeline
+
+# Load the zero-shot classification pipeline with a pre-trained BART model
+classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+
+# Text to be classified (replace with your own text)
+sequence_to_classify = "Apple unveils the new iPhone 15 with groundbreaking camera technology."  
+
+# Candidate labels (replace with your own categories)
+candidate_labels = ["technology", "sports", "politics", "finance", "entertainment"]
+
+# Perform zero-shot classification
+result = classifier(sequence_to_classify, candidate_labels)
+
+# Display the results
+print("Classification Results:")
+
+# Sort labels based on scores (highest first)
+sorted_labels = sorted(zip(result['labels'], result['scores']), key=lambda x: x[1], reverse=True)
+
+# Print each label and its associated score
+for label, score in sorted_labels:
+    print(f"- {label}: {score:.4f}") 
