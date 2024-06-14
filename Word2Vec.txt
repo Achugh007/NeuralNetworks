@@ -4,20 +4,17 @@ from gensim.models import Word2Vec
 # Download NLTK's 'punkt' tokenizer data (if not already downloaded)
 nltk.download('punkt')
 
-# Sample text corpus (replace with your own data)
+# Sample text corpus (each sentence is already a list of words)
 sentences = [
-    "This is a sample sentence",
-    "Word2Vec learns word embeddings",
-    "Embeddings capture semantic relationships"
+    ["This", "is", "a", "sample", "sentence"],
+    ["Word2Vec", "learns", "word", "embeddings"],
+    ["Embeddings", "capture", "semantic", "relationships"]
 ]
 
-# 1. Tokenize the Sentences
-tokenized_sentences = [nltk.word_tokenize(sentence) for sentence in sentences]
-
-# 2. Train the Word2Vec Model (with Lowercasing)
+# Train the Word2Vec Model (with Lowercasing)
 model = Word2Vec(
     sentences=[
-        [word.lower() for word in sentence] for sentence in tokenized_sentences
+        [word.lower() for word in sentence] for sentence in sentences
     ],
     vector_size=100,  # Dimensionality of word vectors
     window=5,         # Context window size
@@ -25,7 +22,7 @@ model = Word2Vec(
     workers=4,        # Number of threads for training
 )
 
-# 3. Explore Word Vectors
+# Explore Word Vectors
 words = list(model.wv.key_to_index)
 
 print("\nWord Embeddings:")
