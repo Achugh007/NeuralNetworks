@@ -1,0 +1,39 @@
+from transformers import pipeline
+
+# ----- Step 1: Load Question-Answering Pipeline -----
+
+# Choose a model from Hugging Face (feel free to experiment with different ones)
+model_name = "deepset/roberta-base-squad2" 
+qa_pipeline = pipeline("question-answering", model=model_name)
+
+# ----- Step 2: Prepare Context and Questions -----
+
+context = """
+The Transformer architecture, introduced in 2017, has revolutionized natural language processing. 
+It's based on the attention mechanism, allowing models to weigh the importance of different words 
+in a sentence when making predictions. Transformers are widely used in tasks like translation, 
+text summarization, and question answering.
+"""
+
+questions = [
+    "What is the Transformer architecture?",
+    "When was the Transformer architecture introduced?",
+    "What is the core mechanism of the Transformer?",
+    "What tasks are Transformers used in?",
+    "Why are Transformers important?"  # This question doesn't have a direct answer in the context
+]
+
+# ----- Step 3: Ask Questions and Get Answers -----
+
+print("Question Answering Results:")
+
+for question in questions:
+    result = qa_pipeline(question=question, context=context)
+    answer = result['answer']  # Extract the answer text from the result
+
+    # Handle potentially unanswerable questions
+    if answer.lower() == "empty":
+        answer = "No answer found in the provided context."
+
+    print(f"\nQ: {question}")
+    print(f"A: {answer}")
