@@ -4,8 +4,8 @@ import numpy as np
 from scipy import spatial
 import pandas as pd
 
-# --- Loading Pre-trained Embeddings --- 
-embed_url = "https://tfhub.dev/google/universal-sentence-encoder/4" 
+# --- Loading Pre-trained Embeddings ---
+embed_url = "https://tfhub.dev/google/universal-sentence-encoder/4"
 embed = hub.KerasLayer(embed_url)
 
 # --- Defining Helper Functions ---
@@ -14,29 +14,29 @@ def calculate_similarity(embedding1, embedding2):
   return cosine_similarity
 
 # --- Task 1: Text Similarity ---
-text_samples = ["This is a great product.", 
+text_samples = ["This is a great product.",
                 "The customer service was terrible.",
                 "I would definitely recommend this!"]
 embeddings = embed(text_samples)
 
 similarity_1_2 = calculate_similarity(embeddings[0], embeddings[1])
-similarity_2_3 = calculate_similarity(embeddings[1], embeddings[2])  
+similarity_2_3 = calculate_similarity(embeddings[1], embeddings[2])
 
 print("Similarity between first and second sentence:", similarity_1_2)
 print("Similarity between second and third sentence:", similarity_2_3)
 
 # --- Task 2: Semantic Search ---
 # Load your dataset (replace 'your_dataset.csv' with the correct path)
-data = pd.read_csv("your_dataset.csv") 
+data = pd.read_csv("your_dataset.csv")
 
 # Assuming a column named 'text' in your dataset:
-dataset_embeddings = embed(data['text'].tolist()) 
+dataset_embeddings = embed(data['text'].tolist())
 
 search_query = "I need help with my order."
 query_embedding = embed([search_query])
 
 similarities = [calculate_similarity(query_embedding, doc_embedding) for doc_embedding in dataset_embeddings]
-top_matches = np.argsort(similarities)[-3:][::-1] 
+top_matches = np.argsort(similarities)[-3:][::-1]
 
 print("Top 3 most similar documents to the query:")
 for idx in top_matches:
@@ -48,7 +48,7 @@ for idx in top_matches:
 
 num_classes = len(set(data['label']))  # Assuming your dataset has a 'label' column
 model = tf.keras.Sequential([
-  embed, 
+  embed,
   tf.keras.layers.Dense(16, activation='relu'),
   tf.keras.layers.Dense(num_classes, activation='softmax')
 ])
