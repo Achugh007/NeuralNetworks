@@ -1,0 +1,28 @@
+import spacy
+import warnings
+#Ignore all warnings from the below python code
+warnings.filterwarnings("ignore")
+
+
+# Load spaCy's English language model
+nlp = spacy.load("en_core_web_sm")
+
+# Sample text
+text = "This is an example text to demonstrate stopword removal using spaCy."
+
+# Process the text with spaCy
+doc = nlp(text)
+
+# Create a list of tokens that are not stopwords and are also alphabetic 
+filtered_tokens = [token.text for token in doc if not token.is_stop and token.is_alpha]
+
+# Join the filtered tokens back into a string
+filtered_text = " ".join(filtered_tokens)
+print("filtered_text: ", filtered_text)
+
+# Alternative (More Concise) Way using list comprehension
+
+filtered_tokens = [token.text for token in doc if not token.is_stop and token.is_alpha]
+filtered_text = " ".join(filtered_tokens)
+
+print("\nfiltered_text: ", filtered_text)
