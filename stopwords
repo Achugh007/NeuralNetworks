@@ -4,9 +4,17 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-# Load spaCy's English language model
-nlp = spacy.load("en_core_web_sm")
+def install_and_load_model(model_name):
+    try:
+        nlp = spacy.load(model_name)  # Try loading the model
+    except OSError:
+        print(f"Spacy model '{model_name}' not found. Installing...")
+        spacy.cli.download(model_name)  # Download the model
+        nlp = spacy.load(model_name)  # Load the model again
+    return nlp
 
+
+nlp = install_and_load_model("en_core_web_sm")  # Auto-install if needed
 # Sample text
 text = "This is an example text to demonstrate stopword removal using spaCy."
 
