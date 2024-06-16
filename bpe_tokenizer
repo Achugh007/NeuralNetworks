@@ -1,0 +1,30 @@
+from tokenizers import Tokenizer
+from tokenizers.models import BPE
+from tokenizers.trainers import BpeTrainer
+from tokenizers.pre_tokenizers import Whitespace
+
+# Prepare your training data
+corpus = [
+    "This is the first sentence.",
+    "This is the second sentence with some repeated words.",
+    "We'll see how BPE handles tokenization.",
+]
+
+# Initialize the tokenizer
+tokenizer = Tokenizer(BPE(unk_token="[UNK]"))
+trainer = BpeTrainer(special_tokens=["[UNK]", "[CLS]", "[SEP]", "[PAD]", "[MASK]"])
+
+# Customize pre-tokenization
+tokenizer.pre_tokenizer = Whitespace()
+
+# Train the tokenizer
+tokenizer.train_from_iterator(corpus, trainer)
+
+# Example usage
+text_to_encode = "This is a new sentence to be tokenized."
+
+output = tokenizer.encode(text_to_encode)
+
+print("Input:", text_to_encode)
+print("Token IDs:", output.ids)
+print("Tokens:", output.tokens)
